@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "react-query";
 // Components
+import Item from "./item/Item";
 import Drawer from "@material-ui/core/Drawer";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Grid from "@material-ui/core/Grid";
@@ -26,7 +27,27 @@ const getProducts = async (): Promise<BasketItemType[]> =>
 const App = () => {
   const { data, isLoading, error } = useQuery<BasketItemType[]>("products", getProducts);
   console.log(data);
-  return <div className="App">Start</div>;
+
+  const getTotalItems = () => null;
+
+  const handleAddToBasket = (clickedItem: BasketItemType) => null;
+
+  const handleRemoveFromBasket = () => null;
+
+  if (isLoading) return <LinearProgress />;
+  if (error) return <div>Something went wrong...</div>;
+
+  return (
+    <Wrapper>
+      <Grid container spacing={3}>
+        {data?.map((item) => (
+          <Grid item key={item.id} xs={12} sm={4}>
+            <Item item={item} handleAddToBasket={handleAddToBasket} />
+          </Grid>
+        ))}
+      </Grid>
+    </Wrapper>
+  );
 };
 
 export default App;
