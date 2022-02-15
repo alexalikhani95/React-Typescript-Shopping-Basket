@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 // Components
 import Item from "./item/Item";
-import Basket from './Basket/Basket'
+import Basket from "./Basket/Basket";
 import Drawer from "@material-ui/core/Drawer";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Grid from "@material-ui/core/Grid";
@@ -26,18 +26,29 @@ const getProducts = async (): Promise<BasketItemType[]> =>
   await (await fetch("https://fakestoreapi.com/products")).json();
 
 const App = () => {
-  const [basketOpen, setBasketOpen] = useState(false)
-  const [basketItems, setBasketItems] = useState([] as BasketItemType[])
+  const [basketOpen, setBasketOpen] = useState(false);
+  const [basketItems, setBasketItems] = useState([] as BasketItemType[]);
   const { data, isLoading, error } = useQuery<BasketItemType[]>("products", getProducts);
   console.log(data);
 
-  const getTotalItems = (items: BasketItemType[]) => 
-  // acc = accumulator
-  //  This will iterate through all the items in the basket, and will use the property 'amount' and add up the amount,
-  // giving us the total amount that's in the basket
-  items.reduce((acc: number, item) => acc + item.amount, 0)
+  const getTotalItems = (items: BasketItemType[]) =>
+    // acc = accumulator
+    //  This will iterate through all the items in the basket, and will use the property 'amount' and add up the amount,
+    // giving us the total amount that's in the basket
+    items.reduce((acc: number, item) => acc + item.amount, 0);
 
-  const handleAddToBasket = (clickedItem: BasketItemType) => null;
+  const handleAddToBasket = (clickedItem: BasketItemType) => {
+    setBasketItems((prev) => {
+      // 1. Is the item already added in the basket?
+      const isItemInBasket = prev.find((item) => item.id === clickedItem.id);
+      // 2 If the item is in the basket, update the amount for the specific item
+      if (isItemInBasket) {
+        return prev.map((item) => (item.id === clickedItem.id ? { ...item, amount: item.amount + 1 } : item));
+      }
+      // First time the item is added ? 
+      return [...prev, { ...clickedItem, amount: 1 }];
+    });
+  };
 
   const handleRemoveFromBasket = () => null;
 
@@ -46,17 +57,14 @@ const App = () => {
 
   return (
     <Wrapper>
-      <Drawer anchor='right' open={basketOpen} onClose={() => setBasketOpen(false)}>
-        <Basket basketItems={basketItems} 
-        addToBasket={handleAddToBasket}
-        removeFromBasket={handleRemoveFromBasket}
-        />
+      <Drawer anchor="right" open={basketOpen} onClose={() => setBasketOpen(false)}>
+        <Basket basketItems={basketItems} addToBasket={handleAddToBasket} removeFromBasket={handleRemoveFromBasket} />
       </Drawer>
-    <StyledButton onClick={() => setBasketOpen(true)}>
-    <Badge badgeContent={getTotalItems(basketItems)} color='error'>
+      <StyledButton onClick={() => setBasketOpen(true)}>
+        <Badge badgeContent={getTotalItems(basketItems)} color="error">
           <AddShoppingCartIcon />
         </Badge>
-    </StyledButton>
+      </StyledButton>
       <Grid container spacing={3}>
         {data?.map((item) => (
           <Grid item key={item.id} xs={12} sm={4}>
