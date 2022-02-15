@@ -45,12 +45,25 @@ const App = () => {
       if (isItemInBasket) {
         return prev.map((item) => (item.id === clickedItem.id ? { ...item, amount: item.amount + 1 } : item));
       }
-      // First time the item is added ? 
+      // First time the item is added ?
       return [...prev, { ...clickedItem, amount: 1 }];
     });
   };
 
-  const handleRemoveFromBasket = () => null;
+  const handleRemoveFromBasket = (id: number) => {
+    setBasketItems(
+      (prev) => (
+        prev.reduce((accumulator, item) => {
+          if (item.id === id) {
+            if (item.amount === 1) return accumulator;
+            return [...accumulator, { ...item, amount: item.amount - 1 }];
+          } else {
+            return [...accumulator, item];
+          }
+        }, [] as BasketItemType[])
+      )
+    );
+  };
 
   if (isLoading) return <LinearProgress />;
   if (error) return <div>Something went wrong...</div>;
