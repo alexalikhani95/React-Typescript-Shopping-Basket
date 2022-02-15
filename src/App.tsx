@@ -30,7 +30,11 @@ const App = () => {
   const { data, isLoading, error } = useQuery<BasketItemType[]>("products", getProducts);
   console.log(data);
 
-  const getTotalItems = (items: BasketItemType[]) => null;
+  const getTotalItems = (items: BasketItemType[]) => 
+  // acc = accumulator
+  //  This will iterate through all the items in the basket, and will use the property 'amount' and add up the amount,
+  // giving us the total amount that's in the cart
+  items.reduce((acc: number, item) => acc + item.amount, 0)
 
   const handleAddToBasket = (clickedItem: BasketItemType) => null;
 
