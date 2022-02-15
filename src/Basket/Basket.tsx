@@ -11,6 +11,8 @@ type Props = {
 };
 
 const Basket: React.FC<Props> = ({ basketItems, addToBasket, removeFromBasket }) => {
+  const calculateTotal = (items: BasketItemType[]) => items.reduce((accumulator: number, item) => accumulator + item.amount * item.price, 0);
+
   return (
     <Wrapper>
       <h2>Your Shopping Basket</h2>
@@ -18,6 +20,7 @@ const Basket: React.FC<Props> = ({ basketItems, addToBasket, removeFromBasket })
       {basketItems.map((item) => (
         <BasketItem key={item.id} item={item} addToBasket={addToBasket} removeFromBasket={removeFromBasket} />
       ))}
+      <h2>Total: £{calculateTotal(basketItems).toFixed(2)}</h2>
     </Wrapper>
   );
 };
