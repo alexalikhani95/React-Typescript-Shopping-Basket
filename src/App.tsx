@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 // Components
 import Item from "./item/Item";
+import Basket from './Basket/Basket'
 import Drawer from "@material-ui/core/Drawer";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Grid from "@material-ui/core/Grid";
@@ -46,7 +47,10 @@ const App = () => {
   return (
     <Wrapper>
       <Drawer anchor='right' open={basketOpen} onClose={() => setBasketOpen(false)}>
-        Basket goes here
+        <Basket basketItems={basketItems} 
+        addToBasket={handleAddToBasket}
+        removeFromBasket={handleRemoveFromBasket}
+        />
       </Drawer>
     <StyledButton onClick={() => setBasketOpen(true)}>
     <Badge badgeContent={getTotalItems(basketItems)} color='error'>

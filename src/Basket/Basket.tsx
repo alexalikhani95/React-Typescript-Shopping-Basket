@@ -1,8 +1,8 @@
-import BasketItem from '../BasketItem/BasketItem'
+import BasketItem from "../BasketItem/BasketItem";
 // Styles
-import { Wrapper } from './Basket.styles'
+import { Wrapper } from "./Basket.styles";
 // Types
-import { BasketItemType } from '../App'
+import { BasketItemType } from "../App";
 
 type Props = {
   basketItems: BasketItemType[];
@@ -15,11 +15,11 @@ const Basket: React.FC<Props> = ({ basketItems, addToBasket, removeFromBasket })
     <Wrapper>
       <h2>Your Shopping Basket</h2>
       {basketItems.length === 0 ? <p>No items in basket.</p> : null}
-      {basketItems.map(item => (
-        <BasketItem />
+      {basketItems.map((item) => (
+        <BasketItem key={item.id} item={item} addToBasket={addToBasket} removeFromBasket={removeFromBasket} />
       ))}
     </Wrapper>
-  )
-}
+  );
+};
 
 export default Basket;
